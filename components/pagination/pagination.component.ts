@@ -5,6 +5,9 @@ import { ControlValueAccessor, NgModel } from '@angular/forms';
 
 import { KeyAttribute } from '../common';
 
+/* tslint:disable-next-line */
+const MouseEvent = (global as any).MouseEvent as MouseEvent;
+
 // todo: extract base functionality classes
 // todo: expose an option to change default configuration
 export interface PaginationConfig extends KeyAttribute {
@@ -18,6 +21,8 @@ export interface PaginationConfig extends KeyAttribute {
   previousText:string;
   nextText:string;
   lastText:string;
+  // css
+  pageBtnClass:string;
 
   rotate:boolean;
 }
@@ -35,6 +40,7 @@ const paginationConfig:PaginationConfig = {
   previousText: 'Previous',
   nextText: 'Next',
   lastText: 'Last',
+  pageBtnClass: '',
   rotate: true
 };
 
@@ -61,12 +67,12 @@ const PAGINATION_TEMPLATE = `
 
     <li class="pagination-next page-item"
         *ngIf="directionLinks"
-        [class.disabled]="noNext()">
+        [class.disabled]="noNext()||disabled">
       <a class="page-link" href (click)="selectPage(page + 1, $event)" [innerHTML]="getText('next')"></a></li>
 
     <li class="pagination-last page-item"
         *ngIf="boundaryLinks"
-        [class.disabled]="noNext()">
+        [class.disabled]="noNext()||disabled">
       <a class="page-link" href (click)="selectPage(totalPages, $event)" [innerHTML]="getText('last')"></a></li>
   </ul>
   `;
@@ -91,6 +97,8 @@ export class PaginationComponent implements ControlValueAccessor, OnInit, Pagina
   @Input() public nextText:string;
   @Input() public lastText:string;
   @Input() public rotate:boolean;
+  // css
+  @Input() public pageBtnClass:string;
 
   @Input() public disabled:boolean;
 
@@ -154,15 +162,14 @@ export class PaginationComponent implements ControlValueAccessor, OnInit, Pagina
   public renderer:Renderer;
   public elementRef:ElementRef;
 
-  private classMap:string;
+  public classMap:string;
+  public pages:Array<any>;
 
-  private _itemsPerPage:number;
-  private _totalItems:number;
-  private _totalPages:number;
-  private inited:boolean = false;
-  // ??
-  private _page:number;
-  private pages:Array<any>;
+  protected _itemsPerPage:number;
+  protected _totalItems:number;
+  protected _totalPages:number;
+  protected inited:boolean = false;
+  protected _page:number;
 
   public constructor(@Self() cd:NgModel, renderer:Renderer, elementRef:ElementRef) {
     this.cd = cd;
@@ -187,6 +194,9 @@ export class PaginationComponent implements ControlValueAccessor, OnInit, Pagina
     this.directionLinks = typeof this.directionLinks !== 'undefined'
       ? this.directionLinks
       : paginationConfig.directionLinks;
+    this.pageBtnClass = typeof this.pageBtnClass !== 'undefined'
+    ? this.pageBtnClass
+    : paginationConfig.pageBtnClass;
 
     // base class
     this.itemsPerPage = typeof this.itemsPerPage !== 'undefined'
@@ -224,7 +234,7 @@ export class PaginationComponent implements ControlValueAccessor, OnInit, Pagina
     this.onTouched = fn;
   }
 
-  private selectPage(page:number, event?:MouseEvent):void {
+  public selectPage(page:number, event?:MouseEvent):void {
     if (event) {
       event.preventDefault();
     }
@@ -240,7 +250,7 @@ export class PaginationComponent implements ControlValueAccessor, OnInit, Pagina
   }
 
   // Create page object used in template
-  private makePage(num:number, text:string, isActive:boolean):{number:number, text:string, active:boolean} {
+  protected makePage(num:number, text:string, isActive:boolean):{number:number, text:string, active:boolean} {
     return {
       number: num,
       text: text,
@@ -248,7 +258,7 @@ export class PaginationComponent implements ControlValueAccessor, OnInit, Pagina
     };
   }
 
-  private getPages(currentPage:number, totalPages:number):Array<any> {
+  protected getPages(currentPage:number, totalPages:number):Array<any> {
     let pages:any[] = [];
 
     // Default page limits
@@ -300,7 +310,7 @@ export class PaginationComponent implements ControlValueAccessor, OnInit, Pagina
   }
 
   // base class
-  private calculateTotalPages():number {
+  protected calculateTotalPages():number {
     let totalPages = this.itemsPerPage < 1
       ? 1
       : Math.ceil(this.totalItems / this.itemsPerPage);

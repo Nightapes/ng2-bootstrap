@@ -20,6 +20,7 @@ import { ProgressDirective } from './progress.directive';
 })
 export class BarComponent implements OnInit, OnDestroy {
   @Input() public type:string;
+  public max:number;
 
   @Input()
   public get value():number {
@@ -38,7 +39,7 @@ export class BarComponent implements OnInit, OnDestroy {
   public transition:string;
   public progress:ProgressDirective;
 
-  private _value:number;
+  protected _value:number;
 
   public constructor(@Host() progress:ProgressDirective) {
     this.progress = progress;

@@ -27,44 +27,44 @@ import { Directive, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output
 // TODO: #576 add callbacks: expanding, collapsing after adding animation
 @Directive({selector: '[collapse]'})
 export class CollapseDirective implements OnInit {
-  // private animation:any;
+  // protected animation:any;
   @Output() public collapsed:EventEmitter<any> = new EventEmitter<any>(false);
   @Output() public expanded:EventEmitter<any> = new EventEmitter<any>(false);
   // style
   // @HostBinding('style.height')
-  // private height:string;
+  // protected height:string;
   @HostBinding('style.display')
-  private display:string;
+  public display:string;
   // shown
   @HostBinding('class.in')
   @HostBinding('attr.aria-expanded')
-  private isExpanded:boolean = true;
+  public isExpanded:boolean = true;
   // hidden
   @HostBinding('attr.aria-hidden')
-  private isCollapsed:boolean = false;
+  public isCollapsed:boolean = false;
   // stale state
   @HostBinding('class.collapse')
-  private isCollapse:boolean = true;
+  public isCollapse:boolean = true;
   // animation state
   @HostBinding('class.collapsing')
-  private isCollapsing:boolean = false;
+  public isCollapsing:boolean = false;
 
-  // @Input() private transitionDuration:number = 500; // Duration in ms
+  // @Input() protected transitionDuration:number = 500; // Duration in ms
 
   @Input()
-  private set collapse(value:boolean) {
+  public set collapse(value:boolean) {
     this.isExpanded = value;
     this.toggle();
   }
 
-  private get collapse():boolean {
+  public get collapse():boolean {
     return this.isExpanded;
   }
 
-  // private open: boolean;
-  // private _ab:AnimationBuilder;
-  private _el:ElementRef;
-  private _renderer:Renderer;
+  // protected open: boolean;
+  // protected _ab:AnimationBuilder;
+  protected _el:ElementRef;
+  protected _renderer:Renderer;
 
   public constructor(/*_ab:AnimationBuilder, */_el:ElementRef, _renderer:Renderer) {
     // this._ab = _ab;

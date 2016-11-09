@@ -4,6 +4,9 @@ import {
 
 import { AccordionComponent } from './accordion.component';
 
+/* tslint:disable-next-line */
+const MouseEvent = (global as any).MouseEvent as MouseEvent;
+
 /* tslint:disable:component-selector-name */
 @Component({
   selector: 'accordion-group, accordion-panel',
@@ -44,8 +47,8 @@ export class AccordionPanelComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _isOpen:boolean;
-  private accordion:AccordionComponent;
+  protected _isOpen:boolean;
+  protected accordion:AccordionComponent;
 
   public constructor(@Inject(AccordionComponent) accordion:AccordionComponent) {
     this.accordion = accordion;

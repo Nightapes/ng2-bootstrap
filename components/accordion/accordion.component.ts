@@ -12,10 +12,10 @@ export class AccordionComponent {
 
   /* tslint:disable:no-unused-variable */
   @HostBinding('class.panel-group')
-  private addClass:boolean = true;
+  public addClass:boolean = true;
   /* tslint:enable:no-unused-variable */
 
-  private groups:Array<AccordionPanelComponent> = [];
+  protected groups:Array<AccordionPanelComponent> = [];
 
   public closeOtherPanels(openGroup:AccordionPanelComponent):void {
     if (!this.closeOthers) {

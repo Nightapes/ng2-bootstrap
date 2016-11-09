@@ -3,6 +3,9 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgModel } from '@angular/forms';
 
+/* tslint:disable-next-line */
+const KeyboardEvent = (global as any).KeyboardEvent as KeyboardEvent;
+
 @Component({
   /* tslint:disable */
   selector: 'rating[ngModel]',
@@ -32,12 +35,12 @@ export class RatingComponent implements ControlValueAccessor, OnInit {
   public onTouched:any = Function.prototype;
 
   public cd:NgModel;
-  private range:Array<any>;
-  private value:number;
-  private preValue:number;
+  public range:Array<any>;
+  public value:number;
+  protected preValue:number;
 
   @HostListener('keydown', ['$event'])
-  protected onKeydown(event:KeyboardEvent):void {
+  public onKeydown(event:KeyboardEvent):void {
     if ([37, 38, 39, 40].indexOf(event.which) === -1) {
       return;
     }
@@ -87,7 +90,7 @@ export class RatingComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  protected reset():void {
+  public reset():void {
     this.value = this.preValue;
     this.onLeave.emit(this.value);
   }
@@ -100,7 +103,7 @@ export class RatingComponent implements ControlValueAccessor, OnInit {
     this.onTouched = fn;
   }
 
-  private buildTemplateObjects(ratingStates:Array<any>, max:number):Array<any> {
+  protected buildTemplateObjects(ratingStates:Array<any>, max:number):Array<any> {
     ratingStates = ratingStates || [];
     let count = ratingStates.length || max;
     let result:any[] = [];
@@ -115,7 +118,7 @@ export class RatingComponent implements ControlValueAccessor, OnInit {
     return result;
   }
 
-  private rate(value:number):void {
+  protected rate(value:number):void {
     if (!this.readonly && value >= 0 && value <= this.range.length) {
       this.writeValue(value);
       this.cd.viewToModelUpdate(value);

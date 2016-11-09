@@ -13,7 +13,7 @@ export class ModalBackdropOptions {
 @Component({
   selector: 'bs-modal-backdrop',
   template: '',
-  host: {'class': `${ClassName.BACKDROP}`}
+  host: {'class': ClassName.BACKDROP}
 })
 export class ModalBackdropComponent {
   public get isAnimated():boolean {
@@ -32,13 +32,14 @@ export class ModalBackdropComponent {
   public set isShown(value:boolean) {
     this._isShown = value;
     this.renderer.setElementClass(this.element.nativeElement, `${ClassName.IN}`, value);
+    this.renderer.setElementClass(this.element.nativeElement, `${ClassName.ACTIVE}`, value);
   }
 
   public element:ElementRef;
   public renderer:Renderer;
 
-  private _isAnimated:boolean;
-  private _isShown:boolean = false;
+  protected _isAnimated:boolean;
+  protected _isShown:boolean = false;
 
   public constructor(options:ModalBackdropOptions, element:ElementRef, renderer:Renderer) {
     this.element = element;

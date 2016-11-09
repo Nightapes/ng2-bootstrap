@@ -7,27 +7,6 @@ import { SlideComponent } from './slide.component';
 
 export enum Direction {UNKNOWN, NEXT, PREV}
 
-const NAVIGATION:any = {
-  [Ng2BootstrapTheme.BS4]: `
-    <a class="left carousel-control" (click)="prev()" *ngIf="slides.length">
-      <span class="icon-prev" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" (click)="next()" *ngIf="slides.length">
-      <span class="icon-next" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
-  `,
-  [Ng2BootstrapTheme.BS3]: `
-    <a class="left carousel-control" (click)="prev()" *ngIf="slides.length">
-      <span class="glyphicon glyphicon-chevron-left"></span>
-    </a>
-    <a class="right carousel-control" (click)="next()" *ngIf="slides.length">
-      <span class="glyphicon glyphicon-chevron-right"></span>
-    </a>
-  `
-};
-
 // todo:
 // (ng-swipe-right)="prev()" (ng-swipe-left)="next()"
 /**
@@ -45,7 +24,14 @@ const NAVIGATION:any = {
          <li *ngFor="let slidez of slides" [class.active]="slidez.active === true" (click)="select(slidez)"></li>
       </ol>
       <div class="carousel-inner"><ng-content></ng-content></div>
-      ${NAVIGATION[Ng2BootstrapConfig.theme]}
+      <a class="left carousel-control" (click)="prev()" *ngIf="slides.length">
+        <span class="icon-prev" aria-hidden="true"></span>
+        <span *ngIf="isBS4" class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" (click)="next()" *ngIf="slides.length">
+        <span class="icon-next" aria-hidden="true"></span>
+        <span *ngIf="isBS4" class="sr-only">Next</span>
+      </a>
     </div>
   `
 })
@@ -64,12 +50,16 @@ export class CarouselComponent implements OnDestroy {
     this.restartTimer();
   }
 
-  private slides:Array<SlideComponent> = [];
-  private currentInterval:any;
-  private isPlaying:boolean;
-  private destroyed:boolean = false;
-  private currentSlide:SlideComponent;
-  private _interval:number;
+  public slides:Array<SlideComponent> = [];
+  protected currentInterval:any;
+  protected isPlaying:boolean;
+  protected destroyed:boolean = false;
+  protected currentSlide:SlideComponent;
+  protected _interval:number;
+
+  public get isBS4():boolean {
+    return Ng2BootstrapConfig.theme === Ng2BootstrapTheme.BS4;
+  }
 
   public ngOnDestroy():void {
     this.destroyed = true;
@@ -154,7 +144,7 @@ export class CarouselComponent implements OnDestroy {
     }
   }
 
-  private goNext(slide:SlideComponent, direction:Direction):void {
+  protected goNext(slide:SlideComponent, direction:Direction):void {
     if (this.destroyed) {
       return;
     }
@@ -173,7 +163,7 @@ export class CarouselComponent implements OnDestroy {
     this.restartTimer();
   }
 
-  private getSlideByIndex(index:number):any {
+  protected getSlideByIndex(index:number):any {
     let len = this.slides.length;
     for (let i = 0; i < len; ++i) {
       if (this.slides[i].index === index) {
@@ -183,11 +173,11 @@ export class CarouselComponent implements OnDestroy {
     return void 0;
   }
 
-  private getCurrentIndex():number {
+  protected getCurrentIndex():number {
     return !this.currentSlide ? 0 : this.currentSlide.index;
   }
 
-  private restartTimer():any {
+  protected restartTimer():any {
     this.resetTimer();
     let interval = +this.interval;
     if (!isNaN(interval) && interval > 0) {
@@ -204,7 +194,7 @@ export class CarouselComponent implements OnDestroy {
     }
   }
 
-  private resetTimer():void {
+  protected resetTimer():void {
     if (this.currentInterval) {
       clearInterval(this.currentInterval);
       this.currentInterval = void 0;

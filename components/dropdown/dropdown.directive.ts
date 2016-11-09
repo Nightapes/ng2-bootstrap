@@ -10,6 +10,7 @@ import { dropdownService, NONINPUT } from './dropdown.service';
 })
 export class DropdownDirective implements OnInit, OnDestroy {
   @HostBinding('class.open')
+  @HostBinding('class.active')
   @Input()
   public get isOpen():boolean {
     return this._isOpen;
@@ -31,9 +32,9 @@ export class DropdownDirective implements OnInit, OnDestroy {
   // drop down toggle element
   public toggleEl:ElementRef;
   public el:ElementRef;
-  private _isOpen:boolean;
+  protected _isOpen:boolean;
 
-  private _changeDetector:ChangeDetectorRef;
+  protected _changeDetector:ChangeDetectorRef;
 
   public constructor(el:ElementRef, ref:ChangeDetectorRef) {
     // @Query('dropdownMenu', {descendants: false})

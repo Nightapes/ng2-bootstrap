@@ -16,7 +16,7 @@ export class AccordionComponent {
   @Input() public closeOthers:boolean;
 
   @HostBinding('class.panel-group')
-  private addClass = true;
+  public addClass = true;
 }
 
 // component AccordionGroup
@@ -32,7 +32,7 @@ export class AccordionGroupComponent implements OnInit, OnDestroy {
   @Input() public get isOpen();
 
   // should be inside of Accordion element
-  constructor(private accordion:Accordion) {}
+  constructor(protected accordion:Accordion) {}
 }
 ```
 

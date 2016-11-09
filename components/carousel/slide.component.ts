@@ -5,7 +5,7 @@ import { CarouselComponent, Direction } from './carousel.component';
 @Component({
   selector: 'slide',
   template: `
-    <div [class.active]="active" class="item text-center">
+    <div [class.active]="active" class="item">
       <ng-content></ng-content>
     </div>
   `
@@ -21,7 +21,7 @@ export class SlideComponent implements OnInit, OnDestroy {
   @HostBinding('class.carousel-item')
   public addClass:boolean = true;
 
-  private carousel:CarouselComponent;
+  protected carousel:CarouselComponent;
 
   public constructor(carousel:CarouselComponent) {
     this.carousel = carousel;
